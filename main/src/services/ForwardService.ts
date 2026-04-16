@@ -50,6 +50,7 @@ import memberRoleCache from '../helpers/memberRoleCache';
 import { GroupRole } from '@icqqjs/icqq/lib/common';
 import path from 'path';
 import { fileTypeFromBuffer, fileTypeFromFile, FileTypeResult } from 'file-type';
+import tg2qWordFilter from '../helpers/tg2qWordFilter';
 
 const NOT_CHAINABLE_ELEMENTS = ['flash', 'record', 'video', 'location', 'share', 'json', 'xml', 'poke'];
 const IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/apng', 'image/webp', 'image/gif', 'image/bmp', 'image/tiff', 'image/x-icon', 'image/avif', 'image/heic', 'image/heif'];
@@ -994,6 +995,12 @@ export default class ForwardService {
         }
       }
 
+      chain = tg2qWordFilter.maskChain(chain);
+      brief = tg2qWordFilter.mask(brief);
+      if (typeof source?.message === 'string') {
+        source.message = tg2qWordFilter.mask(source.message);
+      }
+
       // 防止发送空白消息
       if (chain.length === 0) {
         return [];
@@ -1072,11 +1079,11 @@ export default class ForwardService {
             type: 'image',
             file: headerImage,
             asface: true,
-            brief: messageHeader,
+            brief: tg2qWordFilter.mask(messageHeader),
           });
         }
         else {
-          chainableElements.unshift(messageHeader);
+          chainableElements.unshift(tg2qWordFilter.mask(messageHeader));
         }
       }
       const qqMessages = [] as Array<QQMessageSent>;

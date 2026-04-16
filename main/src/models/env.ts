@@ -40,6 +40,7 @@ const configParsed = z.object({
 
   DISABLE_FILE_UPLOAD_TIP: z.string().transform((v) => ['true', '1', 'yes'].includes(v.toLowerCase())).default('false'),
   IMAGE_SUMMARY: z.string().optional(),
+  TG2Q_BLOCK_WORDS_PATH: z.string().optional(),
 
   LISTEN_PORT: z.string().regex(/^\d+$/).transform(Number).default('8080'),
 
